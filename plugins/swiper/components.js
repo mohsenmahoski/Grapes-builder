@@ -25,9 +25,13 @@ const loadComponents = (editor, opts = {}) => {
             ],
           },
         ],
-        script: (props) => {
+        script: (props) => {    
             const initLib = () => {
-              new Swiper(`.${props.id}`, {
+              // Check if a Swiper instance already exists and destroy it
+              if (window[`${props.id}`]) {
+                window[`${props.id}`].destroy(true, true);
+              }
+              window[`${props.id}`] = new Swiper(`.${props.id}`, {
                 spaceBetween: 30,
                 centeredSlides: true,
                 autoplay: {
@@ -37,8 +41,8 @@ const loadComponents = (editor, opts = {}) => {
                 pagination: {
                   el: `.swiper-pagination`,
                   clickable: true,
-                  dynamicBullets: false,
-                  type: "bullets",
+                  dynamicBullets: !!props.dynamicBullets ?? false,
+                  type: props.progressType ?? "bullets",
                 },
                 navigation: {
                   nextEl: `.swiper-button-next`,
@@ -56,7 +60,9 @@ const loadComponents = (editor, opts = {}) => {
             }
         },
         id: opts.id,
-        'script-props': ['id'],
+        dynamicProgress: false,
+        progressType:  "bullets",
+        'script-props': ['id', 'dynamicProgress', 'progressType'],
       },
     },
     isComponent: (el) => {
@@ -68,12 +74,6 @@ const loadComponents = (editor, opts = {}) => {
     },
     view: defaultView.extend({
       init() {
-        this.listenTo(this.model, "change:dynamicProgress", () => {
-          console.log("dynamicProgress", this.model.get("dynamicProgress"));
-        });
-        this.listenTo(this.model, "change:progressType", () => {
-          console.log("progressType", this.model.get("progressType"));
-        });
       },
     }),
   });

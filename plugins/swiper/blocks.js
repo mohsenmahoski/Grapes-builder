@@ -5,9 +5,16 @@ const loadBlocks = (editor, opts = {}) => {
   const bm = editor.BlockManager;
   const style = `
        <style>
+           .swiper{
+             position: absolute;
+             left:0;
+             top: 0;
+             width: 100%;
+             height: 100%;
+           }
             .swiper-container {
-                width: 600px;
-                height: 300px;
+                width: 100%;
+                height: 100%;
             }
             .swiper-slide {
                 text-align: center;

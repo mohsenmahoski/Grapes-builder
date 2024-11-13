@@ -1,4 +1,5 @@
 import loadComponents from "./components";
+import { updateScript } from "./update";
 import { v4 as uuidv4 } from "uuid";
 
 const loadBlocks = (editor, opts = {}) => {
@@ -44,6 +45,7 @@ const loadBlocks = (editor, opts = {}) => {
             }
        </style>
   `;
+
   bm.add(opts.name, {
     label: `
           <i class="fa fa-arrows-h" style="font-size:60px;"></i>
@@ -53,9 +55,12 @@ const loadBlocks = (editor, opts = {}) => {
         `,
     category: opts.category,
     content: () => {
-      const uniqueId = `gs-${uuidv4()}`;  // Generate unique ID
+      const uniqueId = `gs-${uuidv4()}`; // Generate unique ID
       opts["id"] = uniqueId;
+      opts["updateScript"] = updateScript;
+      
       loadComponents(editor, opts);
+
       return `
         <div class="swiper" style="width: 100%; height: 100%; background: red; padding: 10px;">
             <div class="swiper-container ${uniqueId} mySwiper">

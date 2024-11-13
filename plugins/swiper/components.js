@@ -1,16 +1,26 @@
+import { getProps } from "./update";
+
 const loadComponents = (editor, opts = {}) => {
   const dc = editor.DomComponents;
   const defaultType = dc.getType("default");
   const defaultView = defaultType.view;
-
+  const scriptProps = ["id", "pagination", "navigation", "progressType"];
   dc.addType(opts.name, {
     model: {
       defaults: {
         traits: [
           {
             type: "checkbox",
-            name: "dynamicProgress",
-            label: "Dynamic Progress",
+            name: "navigation",
+            label: "navigation",
+            value: true,
+            changeProp: 1,
+          },
+          {
+            type: "checkbox",
+            name: "pagination",
+            label: "enable pagination",
+            value: true,
             changeProp: 1,
           },
           {
@@ -25,44 +35,53 @@ const loadComponents = (editor, opts = {}) => {
             ],
           },
         ],
-        script: (props) => {    
-            const initLib = () => {
-              // Check if a Swiper instance already exists and destroy it
-              if (window[`${props.id}`]) {
-                window[`${props.id}`].destroy(true, true);
-              }
-              window[`${props.id}`] = new Swiper(`.${props.id}`, {
-                spaceBetween: 30,
-                centeredSlides: true,
-                autoplay: {
-                  delay: 2500,
-                  disableOnInteraction: false,
-                },
-                pagination: {
-                  el: `.swiper-pagination`,
-                  clickable: true,
-                  dynamicBullets: !!props.dynamicBullets ?? false,
-                  type: props.progressType ?? "bullets",
-                },
-                navigation: {
-                  nextEl: `.swiper-button-next`,
-                  prevEl: `.swiper-button-prev`,
-                },
-              });
-            };
-            if (typeof Swiper === "undefined") {
-              const script = document.createElement("script");
-              script.onload = initLib;
-              script.src = "http://localhost:3000/swiper-bundle.min.js";
-              document.body.appendChild(script);
-            } else {
-              initLib();
+        script: (props) => {
+          const initLib = () => {
+            // Check if a Swiper instance already exists and destroy it
+            if (window[`${props.id}`]) {
+              window[`${props.id}`].destroy(true, true);
             }
+           
+            const options = {
+              spaceBetween: 30,
+              centeredSlides: true,
+              autoplay: {
+                delay: 2500,
+                disableOnInteraction: false,
+              },
+            };
+
+            if (props.pagination) {
+              options.pagination = {
+                el: `.swiper-pagination`,
+                clickable: true,
+              };
+              if(props.progressType){
+                options.pagination.type = props.progressType;
+              }
+            }
+            if (props.navigation) {
+              options.navigation = {
+                nextEl: `.swiper-button-next`,
+                prevEl: `.swiper-button-prev`,
+              };
+            }
+            window[`${props.id}`] = new Swiper(`.${props.id}`, options);
+          };
+          if (typeof Swiper === "undefined") {
+            const script = document.createElement("script");
+            script.onload = initLib;
+            script.src = "http://localhost:3000/swiper-bundle.min.js";
+            document.body.appendChild(script);
+          } else {
+            initLib();
+          }
         },
         id: opts.id,
-        dynamicProgress: false,
-        progressType:  "bullets",
-        'script-props': ['id', 'dynamicProgress', 'progressType'],
+        pagination: true,
+        navigation: true,
+        progressType: "bullets",
+        "script-props": scriptProps,
       },
     },
     isComponent: (el) => {
@@ -73,7 +92,11 @@ const loadComponents = (editor, opts = {}) => {
       }
     },
     view: defaultView.extend({
-      init() {
+      init({ model }) {
+        this.listenTo(model, "change:navigation", () => {
+            const props = getProps(model, scriptProps);
+            opts.updateScript(editor, model.get("id"), props);
+        });
       },
     }),
   });

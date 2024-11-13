@@ -28,6 +28,7 @@ const Editor = () => {
         scripts: ["http://localhost:3000/swiper-bundle.min.js"],
       },
     });
+    editor.current.Css.setRule('.gjs-cell', { background: '#f7f7f7', position: 'relative' });
   }, []);
 
   const getProjectData = async () => {

@@ -1,7 +1,5 @@
 "use client";
 
-import "grapesjs/dist/css/grapes.min.css";
-
 import React, { useEffect, useRef } from "react";
 
 import axios from "axios";
@@ -28,7 +26,7 @@ const Editor = () => {
         scripts: ["http://localhost:3000/swiper-bundle.min.js"],
       },
     });
-    editor.current.Css.setRule('.gjs-cell', { background: '#f7f7f7', position: 'relative' });
+    editor.current.Css.setRule('.gjs-cell', { position: 'relative' });
   }, []);
 
   const getProjectData = async () => {

@@ -6,13 +6,17 @@ const loadBlocks = (editor, opts = {}) => {
   const bm = editor.BlockManager;
   const style = `
        <style>
-           .swiper{
-             position: absolute;
-             left:0;
-             top: 0;
-             width: 100%;
-             height: 100%;
-           }
+            .swiper{
+              position: absolute;
+              left:0;
+              top: 0;
+              width: 100%;
+              height: 100%;
+            }
+            .swiper-pagination{
+                height: fit-content;
+                padding: 5px;
+            }
             .swiper-container {
                 width: 100%;
                 height: 100%;
@@ -21,8 +25,6 @@ const loadBlocks = (editor, opts = {}) => {
                 text-align: center;
                 font-size: 18px;
                 background: #fff;
-
-                /* Center slide text vertically */
                 display: -webkit-box;
                 display: -ms-flexbox;
                 display: -webkit-flex;
@@ -36,7 +38,6 @@ const loadBlocks = (editor, opts = {}) => {
                 -webkit-align-items: center;
                 align-items: center;
             }
-
             .swiper-slide img {
                 display: block;
                 width: 100%;
@@ -58,20 +59,16 @@ const loadBlocks = (editor, opts = {}) => {
       const uniqueId = `gs-${uuidv4()}`; // Generate unique ID
       opts["id"] = uniqueId;
       opts["updateScript"] = updateScript;
-      
+
       loadComponents(editor, opts);
 
       return `
-        <div class="swiper" style="width: 100%; height: 100%; background: red; padding: 10px;">
-            <div class="swiper-container ${uniqueId} mySwiper">
+        <div class="swiper" style="width: 100%; height: 100%;padding: 20px;">
+            <div class="swiper-container ${uniqueId}">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">Slide 1</div>
                     <div class="swiper-slide">Slide 2</div>
                     <div class="swiper-slide">Slide 3</div>
-                    <div class="swiper-slide">Slide 4</div>
-                    <div class="swiper-slide">Slide 5</div>
-                    <div class="swiper-slide">Slide 6</div>
-                    <div class="swiper-slide">Slide 7</div>
                 </div>
                 <div class="swiper-pagination"></div>
                 <div class="swiper-button-prev"></div>

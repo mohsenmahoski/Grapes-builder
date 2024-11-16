@@ -1,6 +1,9 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "./globals.css";
+import "../public/swiper-bundle.min.css";
+
+import type { Metadata } from "next";
+import Script from "next/script";
+import localFont from "next/font/local";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,6 +31,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Script strategy="beforeInteractive" src="http://localhost:3000/swiper-bundle.min.js" />
         {children}
       </body>
     </html>
